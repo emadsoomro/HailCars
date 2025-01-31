@@ -113,9 +113,9 @@ class Handywrapper:
         except:
             return False
 
-    def wait_explicitly(self, By_type, locator=""):
+    def wait_explicitly(self, By_type, locator="", timeout=10):
         try:
-            WebDriverWait(self.driver, 10).until(
+            WebDriverWait(self.driver, timeout).until(
                 EC.presence_of_element_located((By_type, locator)))
         except:
             pass
