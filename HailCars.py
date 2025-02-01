@@ -111,7 +111,7 @@ class HailCars:
                             "URL": hw.get_value_by_key("url",hw.get_value_by_key("offers",item)),
                             "Image": hw.get_value_by_key("image",item),
                             "City": location,
-                            "Model": model.Capitalize()
+                            "Model": model.capitalize()
                         }
                         if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Manufacturer"] !="":
                             parsed_data.append(vehicle_details)
