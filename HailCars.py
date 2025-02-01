@@ -10,7 +10,7 @@ from datetime import datetime
 
 class HailCars:
     # PW_Locations =["Karachi", "Lahore", "Islamabad", "Rawalpindi", "Peshawar", "Quetta","Abbottabad","Bahawalpur","Faisalabad","Gujranwala","Haripur", "Hyderabad","Jhelum", "Kashmir", "Larkana","Mian Wali", "Mirpur khas", "Multan","Murree", "Muzaffar Gargh", "Muzaffarabad", "Nawabshah","Rahim Yar Khan","Sadiqabad","Sahiwal","Sargodha","Sialkot","Sukkur","Taxila"]
-    PW_Locations =["Lahore", "Islamabad", "Hyderabad","Multan"]
+    PW_Locations =["Karachi","Lahore", "Islamabad", "Hyderabad","Multan"]
     # Makes = ["Toyota", "Suzuki", "Honda", "Daihatsu", "Adam", "Audi", "BAIC", "BMW", "BYD", "Bentley",
     # "Buick", "Cadillac", "Changan", "Chery", "Chevrolet", "Chrysler", "DFSK", "Daehan", "Daewoo",
     # "Datsun", "Deepal", "Dodge", "FAW", "Fiat", "Ford", "GMC", "GUGO", "Geely", "Genesis",
@@ -50,10 +50,10 @@ class HailCars:
             hw.wait_explicitly(By.XPATH, "//li//input[@name='checkbox']")
             Makes = hw.get_list_of_attributes(By.XPATH, "//li//input[@name='checkbox']")
             Makes = list(map(lambda x: x.strip(), Makes))
+            hw.Click_element(By.XPATH, "//button[.='NO THANKS']")
             for make in Makes:
                 time.sleep(0.5)
                 hw.Click_element(By.XPATH,"//a[contains(.,'Make')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
-                hw.Click_element(By.XPATH,"//button[.='NO THANKS']")
                 hw.Click_element(By.XPATH,"//button[.='Clear']")
                 time.sleep(0.5)
                 hw.Click_element(By.XPATH,f"//input[@value='{make.lower()}' and @name='checkbox']")
@@ -386,7 +386,7 @@ class HailCars:
             currency VARCHAR(10),
             url TEXT UNIQUE,
             image TEXT,
-            city VARCHAR(10),
+            city VARCHAR(50),
             model VARCHAR(255),
             timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );''').format(table_name)
