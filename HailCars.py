@@ -96,6 +96,11 @@ class HailCars:
 
                         except json.JSONDecodeError:
                             print(f"Error decoding JSON in script tag {idx}")
+                        URL =  hw.get_value_by_key("url", hw.get_value_by_key("offers", item))
+                        Url = URL.replace("https://www.pakwheels.com", "")
+                        hw.wait_explicitly(By.XPATH,f"//a[@href='{Url}']/parent::div/parent::div/parent::div/following-sibling::div[1]//ul[1]/li")
+                        Location = hw.find_element_text(By.XPATH,f"//a[@href='{Url}']/parent::div/parent::div/parent::div/following-sibling::div[1]//ul[1]/li")
+
                         vehicle_details = {
                             "Brand": hw.get_value_by_key("name",hw.get_value_by_key("brand",item)),
                             "Description": hw.get_value_by_key("description",item),
@@ -110,9 +115,10 @@ class HailCars:
                             "Currency": hw.get_value_by_key("priceCurrency",hw.get_value_by_key("offers", item)),
                             "URL": hw.get_value_by_key("url",hw.get_value_by_key("offers",item)),
                             "Image": hw.get_value_by_key("image",item),
-                            "City": location,
+                            "City": Location,
                             "Model": model.capitalize()
                         }
+
                         if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Manufacturer"] !="":
                             parsed_data.append(vehicle_details)
 
