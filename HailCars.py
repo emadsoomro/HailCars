@@ -115,7 +115,7 @@ class HailCars:
                             "Currency": hw.get_value_by_key("priceCurrency",hw.get_value_by_key("offers", item)),
                             "URL": hw.get_value_by_key("url",hw.get_value_by_key("offers",item)),
                             "Image": hw.get_value_by_key("image",item),
-                            "City": Location,
+                            "City": Location.strip(),
                             "Model": model.capitalize()
                         }
 
@@ -199,24 +199,29 @@ class HailCars:
                         model = "".join(model_text.split("(")[:-1]).strip()
 
                         Location = Location.split(',')[-1]
+                        Location = Location.strip()
 
                         vehicle_details = {
-                            "Brand": make,
-                            "Description": Description,
+                            "Brand": make.strip(),
+                            "Description": Description.strip(),
                             "Condition": "used",
-                            "Model Year": ModelYear,
-                            "Manufacturer": make,
-                            "Fuel Type": FuelType,
+                            "Model Year": ModelYear.strip(),
+                            "Manufacturer": make.strip(),
+                            "Fuel Type": FuelType.strip(),
                             "Transmission": "",
                             "Engine": "",
-                            "Mileage": Mileage,
-                            "Price": Price,
-                            "Currency": Currency,
-                            "URL": Url,
-                            "Image": Image,
-                            "City": Location,
-                            "Model": model
+                            "Mileage": Mileage.strip(),
+                            "Price": Price.strip(),
+                            "Currency": Currency.strip(),
+                            "URL": Url.strip(),
+                            "Image": Image.strip(),
+                            "City": Location.strip(),
+                            "Model": model.strip()
                         }
+
+                        if make.lower() not in Url:
+                            continue
+
                         if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Image"] != "" and vehicle_details[
                             "Manufacturer"] != "":
                             parsed_data.append(vehicle_details)
@@ -266,7 +271,7 @@ class HailCars:
             hw.wait_explicitly(By.XPATH, f"//div[contains(@class,'alert')]//a[.='{location}']/preceding-sibling::input")
             hw.Click_element(By.XPATH, f"//div[contains(@class,'alert')]//a[.='{location}']/preceding-sibling::input")
             hw.Click_element(By.XPATH, f"//button[.='OK']")
-            for make in makes[3:]:
+            for make in makes:
                 hw.Click_element(By.XPATH, f"//button[.='OK']")
                 hw.Click_element(By.XPATH,f"//div[@id='inner-makes-cont']/following-sibling::div[contains(.,'More Options')]")
                 hw.Click_element(By.XPATH, f"//button[.='Later']")
@@ -318,25 +323,29 @@ class HailCars:
                             except:
                                 Currency = "Rs."
                                 Price = item_details[3]
-                            model = model
+                            # model = model
 
                             vehicle_details = {
-                                "Brand": make,
-                                "Description": Description,
+                                "Brand": make.strip(),
+                                "Description": Description.strip(),
                                 "Condition": "used",
-                                "Model Year": ModelYear,
-                                "Manufacturer": make,
-                                "Fuel Type": FuelType,
-                                "Transmission": item_details[6],
-                                "Engine": item_details[5],
-                                "Mileage": Mileage,
-                                "Price": Price,
-                                "Currency": Currency,
-                                "URL": Url,
-                                "Image": Image,
-                                "City": item_details[1],
-                                "Model": model
+                                "Model Year": ModelYear.strip(),
+                                "Manufacturer": make.strip(),
+                                "Fuel Type": FuelType.strip(),
+                                "Transmission": item_details[6].strip(),
+                                "Engine": item_details[5].strip(),
+                                "Mileage": Mileage.strip(),
+                                "Price": Price.strip(),
+                                "Currency": Currency.strip(),
+                                "URL": Url.strip(),
+                                "Image": Image.strip(),
+                                "City": item_details[1].strip(),
+                                "Model": model.strip()
                             }
+
+                            if make.lower() not in Url:
+                                continue
+
                             if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Image"] != "" and vehicle_details[
                                 "Manufacturer"] != "":
                                 parsed_data.append(vehicle_details)
@@ -383,7 +392,7 @@ class HailCars:
             engine VARCHAR(50),
             mileage VARCHAR(50),
             price VARCHAR(50),
-            currency VARCHAR(10),
+            currency VARCHAR(25),
             url TEXT UNIQUE,
             image TEXT,
             city VARCHAR(50),
@@ -439,4 +448,4 @@ class HailCars:
         conn.commit()
 
 HailCars = HailCars()
-HailCars.pakwheels()
+HailCars.olx()
