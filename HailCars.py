@@ -119,7 +119,7 @@ class HailCars:
                             "Model": model.capitalize()
                         }
 
-                        if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Manufacturer"] !="":
+                        if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Image"] != "" and vehicle_details["Manufacturer"] !="":
                             parsed_data.append(vehicle_details)
 
                             data_to_insert = (
@@ -217,7 +217,7 @@ class HailCars:
                             "City": Location,
                             "Model": model
                         }
-                        if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details[
+                        if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Image"] != "" and vehicle_details[
                             "Manufacturer"] != "":
                             parsed_data.append(vehicle_details)
 
@@ -337,7 +337,7 @@ class HailCars:
                                 "City": item_details[1],
                                 "Model": model
                             }
-                            if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details[
+                            if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Image"] != "" and vehicle_details[
                                 "Manufacturer"] != "":
                                 parsed_data.append(vehicle_details)
 
