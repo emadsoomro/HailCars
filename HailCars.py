@@ -119,7 +119,7 @@ class HailCars:
                             "Model": model.capitalize()
                         }
 
-                        if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Image"] != "" and vehicle_details["Manufacturer"] !="":
+                        if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Image"] != "" and vehicle_details["City"] !="":
                             parsed_data.append(vehicle_details)
 
                             data_to_insert = (
@@ -182,8 +182,9 @@ class HailCars:
                         time.sleep(0.1)
                         item_ind = item_ind + 1
                         try:
-                            wd.execute_script(
-                                "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", hw.find_element(By.XPATH,f"(//li[@aria-label='Listing']/article)[{item_ind}]/div//picture/source"))
+                            # wd.execute_script(
+                            #     "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", hw.find_element(By.XPATH,f"(//li[@aria-label='Listing']/article)[{item_ind}]/div//picture/source"))
+                            hw.find_element(By.XPATH,f"(//li[@aria-label='Listing']/article)[{item_ind}]/div//picture/source")
                         except:
                             pass
                         Description = hw.get_attribute(By.XPATH, f"(//li[@aria-label='Listing']/article)[{item_ind}]/div/div/a","title")
@@ -223,7 +224,7 @@ class HailCars:
                             continue
 
                         if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Image"] != "" and vehicle_details[
-                            "Manufacturer"] != "":
+                            "City"] != "":
                             parsed_data.append(vehicle_details)
 
                             data_to_insert = (
@@ -242,9 +243,10 @@ class HailCars:
 
                     time.sleep(0.5)
                     try:
-                        wd.execute_script(
-                            "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
-                        hw.find_element(By.XPATH, "//a[.='Clear']"))
+                        # wd.execute_script(
+                        #     "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+                        # hw.find_element(By.XPATH, "//a[.='Clear']"))
+                        hw.find_element(By.XPATH, "//a[.='Clear']")
                     except:
                         pass
                     hw.Click_element(By.XPATH, "//a[.='Clear']")
@@ -299,8 +301,9 @@ class HailCars:
                     for item_ind in range(len(items)):
                         item_ind = item_ind + 1
                         try:
-                            wd.execute_script(
-                                "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", hw.find_element(By.XPATH,f"//div[@id='cat-contents'][{item_ind}]"))
+                            # wd.execute_script(
+                            #     "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", hw.find_element(By.XPATH,f"//div[@id='cat-contents'][{item_ind}]"))
+                            hw.find_element(By.XPATH,f"//div[@id='cat-contents'][{item_ind}]")
                         except:
                             pass
                         hw.wait_explicitly(By.XPATH, f"//div[contains(@id,'popup')]/button[@class='close-btn']", 3)
@@ -347,7 +350,7 @@ class HailCars:
                                 continue
 
                             if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Image"] != "" and vehicle_details[
-                                "Manufacturer"] != "":
+                                "City"] != "":
                                 parsed_data.append(vehicle_details)
 
                                 data_to_insert = (
@@ -369,9 +372,9 @@ class HailCars:
                         hw.wait_explicitly(By.XPATH,
                                            f"//div[@id='models']/following-sibling::div[@class='more_options']")
                         hw.Click_element(By.XPATH, f"//div[@id='models']/following-sibling::div[@class='more_options']")
-                        wd.execute_script(
-                            "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
-                            hw.find_element(By.XPATH, "//div[@id='models']/following-sibling::div[@class='more_options']"))
+                        # wd.execute_script(
+                        #     "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+                        #     hw.find_element(By.XPATH, "//div[@id='models']/following-sibling::div[@class='more_options']"))
                     except:
                         pass
                     hw.wait_explicitly(By.XPATH, f"//span[.='Clear']")
