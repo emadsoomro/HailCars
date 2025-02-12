@@ -13,6 +13,7 @@ class Handywrapper:
         element = ""
         try:
             element = self.driver.find_element(By_type, locator)
+            self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
             print(element)
             return element
         except:
@@ -96,7 +97,7 @@ class Handywrapper:
                 self.wait_explicitly(By_type, locator)
                 element = self.find_element(By_type, locator)
                 self.wait_explicitly(By_type, locator)
-                self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+                # self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
                 time.sleep(0.5)
                 element.click()
         except:

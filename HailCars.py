@@ -7,10 +7,17 @@ import json
 import psycopg2
 from psycopg2 import sql
 from datetime import datetime
+import re
+from selenium.webdriver.chrome.options import Options
 
 class HailCars:
+
+    def clean_text(self,text):
+        return re.sub(r'[^a-zA-Z0-9 ]', '', text)
+
     # PW_Locations =["Karachi", "Lahore", "Islamabad", "Rawalpindi", "Peshawar", "Quetta","Abbottabad","Bahawalpur","Faisalabad","Gujranwala","Haripur", "Hyderabad","Jhelum", "Kashmir", "Larkana","Mian Wali", "Mirpur khas", "Multan","Murree", "Muzaffar Gargh", "Muzaffarabad", "Nawabshah","Rahim Yar Khan","Sadiqabad","Sahiwal","Sargodha","Sialkot","Sukkur","Taxila"]
     PW_Locations =["Karachi","Lahore", "Islamabad", "Hyderabad","Multan"]
+    # PW_Locations =["Islamabad", "Hyderabad","Multan"]
     # Makes = ["Toyota", "Suzuki", "Honda", "Daihatsu", "Adam", "Audi", "BAIC", "BMW", "BYD", "Bentley",
     # "Buick", "Cadillac", "Changan", "Chery", "Chevrolet", "Chrysler", "DFSK", "Daehan", "Daewoo",
     # "Datsun", "Deepal", "Dodge", "FAW", "Fiat", "Ford", "GMC", "GUGO", "Geely", "Genesis",
@@ -31,7 +38,15 @@ class HailCars:
         Locations=self.PW_Locations
         # Makes = self.Makes
 
-        wd = webdriver.Chrome()
+
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+        chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+        chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
+        chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
+        chrome_options.add_argument("--window-size=1920x1080")
+
+        wd = webdriver.Chrome(options=chrome_options)
         hw = Handywrapper(wd)
         for location in Locations:
             wd.get("https://www.pakwheels.com/used-cars")
@@ -119,7 +134,7 @@ class HailCars:
                             "Model": model.capitalize()
                         }
 
-                        if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Image"] != "" and vehicle_details["City"] !="":
+                        if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Model"] != "" and vehicle_details["Image"] != "" and vehicle_details["City"] !="":
                             parsed_data.append(vehicle_details)
 
                             data_to_insert = (
@@ -153,12 +168,22 @@ class HailCars:
         makes = ["Suzuki", "Toyota", "Honda", "Daihatsu", "Nissan", "Mitsubishi", "KIA", "Changan", "Hyundai", "Mazda",
                   "FAW", "MG", "Prince", "Mercedes", "Chevrolet", "Isuzu", "Subaru", "Proton", "DFSK"]
 
-        wd = webdriver.Chrome()
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+        chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+        chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
+        chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
+        chrome_options.add_argument("--window-size=1920x1080")
+
+        wd = webdriver.Chrome(options=chrome_options)
+
         hw = Handywrapper(wd)
         for location in Locations:
             wd.get("https://www.olx.com.pk/cars_c84")
             hw.wait_explicitly(By.XPATH, f"(//span[contains(.,'{location}')])[1]")
             hw.Click_element(By.XPATH, f"(//span[contains(.,'{location}')])[1]")
+            time.sleep(0.5)
+            hw.Click_element(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox']")
             run =1
             for make in makes:
                 time.sleep(0.5)
@@ -199,8 +224,18 @@ class HailCars:
                         Price = Price.split(' ')[-1]
                         model = "".join(model_text.split("(")[:-1]).strip()
 
-                        Location = Location.split(',')[-1]
-                        Location = Location.strip()
+                        Location_ = Location.split(',')[-1]
+                        Location_ = Location_.strip()
+                        Location_ = self.clean_text(Location_)
+                        if Location_.lower() == "pakistan":
+                            try:
+                                Location_ = Location.split(',')[-2]
+                                Location_ = Location_.strip()
+                                Location_ = self.clean_text(Location_)
+                                if Location_.lower() == "islamabad capital territory":
+                                    Location_ = "Islamabad"
+                            except:
+                                pass
 
                         vehicle_details = {
                             "Brand": make.strip(),
@@ -216,14 +251,14 @@ class HailCars:
                             "Currency": Currency.strip(),
                             "URL": Url.strip(),
                             "Image": Image.strip(),
-                            "City": Location.strip(),
+                            "City": Location_.strip(),
                             "Model": model.strip()
                         }
 
-                        if make.lower() not in Url:
+                        if make.lower() not in Url and make.lower() not in Description.lower():
                             continue
 
-                        if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Image"] != "" and vehicle_details[
+                        if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Model"] != "" and vehicle_details["Image"] != "" and vehicle_details[
                             "City"] != "":
                             parsed_data.append(vehicle_details)
 
@@ -262,7 +297,14 @@ class HailCars:
         Locations = self.PW_Locations
         makes = ["Suzuki", "Toyota", "Honda", "Daihatsu", "Nissan", "Mitsubishi", "Hyundai", "Mercedes Benz", "Kia", "Mazda", "BMW", "Audi", "Faw", "Chevrolet", "Subaru", "Daewoo", "Lexus", "United", "Jeep", "Adam", "Prince", "Changan", "Land Rover", "Range Rover", "Chery", "Alfa Romeo", "Porsche", "Volkswagen", "Ford", "SsangYong", "Isuzu", "Fiat", "Datsun", "Bentley", "Classic Cars", "Mini", "Cadillac", "Buick", "Sogo", "Others", "Master", "Roma", "Austin", "DFSK", "Willys", "Geely", "JAC", "Dodge", "Jaguar", "Hummer", "Hino", "Seat", "Acura", "Dongfeng", "JW Forland", "Peugeot", "Morris", "Proton", "Vauxhall", "Sokon", "Saab", "Oldsmobile", "Chrysler", "Golden Dragon", "Scion", "JMC"]
 
-        wd = webdriver.Chrome()
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+        chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+        chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
+        chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
+        chrome_options.add_argument("--window-size=1920x1080")
+
+        wd = webdriver.Chrome(options=chrome_options)
         hw = Handywrapper(wd)
         for location in Locations:
             wd.get("https://www.gari.pk/used-cars-search/")
@@ -346,10 +388,10 @@ class HailCars:
                                 "Model": model.strip()
                             }
 
-                            if make.lower() not in Url:
+                            if make.lower() not in Url and make.lower() not in Description.lower():
                                 continue
 
-                            if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Image"] != "" and vehicle_details[
+                            if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Model"] != "" and vehicle_details["Image"] != "" and vehicle_details[
                                 "City"] != "":
                                 parsed_data.append(vehicle_details)
 
@@ -449,6 +491,7 @@ class HailCars:
 
         cursor.execute(insert_query, data)
         conn.commit()
-
+        print(f"record inserted {data}")
 HailCars = HailCars()
 HailCars.olx()
+
