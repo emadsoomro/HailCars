@@ -493,5 +493,5 @@ class HailCars:
         conn.commit()
         print(f"record inserted {data}")
 HailCars = HailCars()
-HailCars.olx()
+HailCars.pakwheels()
 
