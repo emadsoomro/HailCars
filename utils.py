@@ -12,6 +12,7 @@ class Handywrapper:
     def find_element(self,By_type, locator=""):
         element = ""
         try:
+            self.wait_explicitly(By_type, locator, timeout=3)
             element = self.driver.find_element(By_type, locator)
             self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
             print(element)
@@ -127,3 +128,13 @@ class Handywrapper:
             return value
         except:
             return ""
+
+    def scroll_to_element(self, By_type, locator, element=None):
+        try:
+            if element != None:
+                self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+            else:
+                element = self.find_element(By_type,locator)
+                self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+        except:
+            pass

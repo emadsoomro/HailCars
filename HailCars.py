@@ -50,7 +50,10 @@ class HailCars:
         hw = Handywrapper(wd)
         for location in Locations:
             wd.get("https://www.pakwheels.com/used-cars")
-            hw.Click_element(By.XPATH," //span[.='All Cities']//parent::a[@href='javascript:void(0)']")
+            hw.wait_explicitly(By.XPATH, "//button[.='NO THANKS']")
+            hw.Click_element(By.XPATH, "//button[.='NO THANKS']")
+            hw.wait_explicitly(By.XPATH,"//span[.='All Cities']//parent::a[@href='javascript:void(0)']")
+            hw.Click_element(By.XPATH,"//span[.='All Cities']//parent::a[@href='javascript:void(0)']")
             serach_city = hw.find_element(By.XPATH,"//span[.='All Cities']/parent::a//following-sibling::div/div[@class='chzn-search']/input")
 
             serach_city.send_keys(location)
@@ -61,16 +64,19 @@ class HailCars:
             while loading:
                 loading = hw.is_element_present(By.XPATH,"//i[@class='ajax-search-loader search-loader-fixed' and not @style='display: none;']")
                 time.sleep(1)
+
             hw.Click_element(By.XPATH,"//a[contains(.,'Make')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
             hw.wait_explicitly(By.XPATH, "//li//input[@name='checkbox']")
             Makes = hw.get_list_of_attributes(By.XPATH, "//li//input[@name='checkbox']")
             Makes = list(map(lambda x: x.strip(), Makes))
-            hw.Click_element(By.XPATH, "//button[.='NO THANKS']")
+
             for make in Makes:
                 time.sleep(0.5)
                 hw.Click_element(By.XPATH,"//a[contains(.,'Make')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
                 hw.Click_element(By.XPATH,"//button[.='Clear']")
                 time.sleep(0.5)
+                hw.wait_explicitly(By.XPATH, "//button[.='NO THANKS']", timeout=1)
+                hw.Click_element(By.XPATH, "//button[.='NO THANKS']")
                 hw.Click_element(By.XPATH,f"//input[@value='{make.lower()}' and @name='checkbox']")
 
                 hw.Click_element(By.XPATH,"//button[@value='submit' and .='Submit']")
@@ -148,10 +154,14 @@ class HailCars:
                             except Exception as e:
                                 print(f"error: {e}")
 
-                hw.Click_element(By.XPATH,"//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
-                hw.Click_element(By.XPATH, "//button[.='Clear']")
-                hw.Click_element(By.XPATH, "//button[@value='submit' and .='Submit']")
+                    hw.wait_explicitly(By.XPATH,"//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
+                    hw.scroll_to_element(By.XPATH, "//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
+                    hw.Click_element(By.XPATH,"//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
+                    hw.Click_element(By.XPATH, "//button[.='Clear']")
+                    hw.Click_element(By.XPATH, "//button[@value='submit' and .='Submit']")
 
+                hw.wait_explicitly(By.XPATH,"//a[contains(.,'Make')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
+                hw.scroll_to_element(By.XPATH, "//a[contains(.,'Make')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
                 hw.Click_element(By.XPATH,"//a[contains(.,'Make')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
                 hw.Click_element(By.XPATH, "//button[.='Clear']")
                 hw.Click_element(By.XPATH, "//button[@value='submit' and .='Submit']")
