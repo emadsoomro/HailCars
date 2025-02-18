@@ -40,10 +40,10 @@ class HailCars:
 
 
         chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Run Chrome in headless mode
-        chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
-        chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
-        chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
+        # chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+        # chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+        # chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
+        # chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
         chrome_options.add_argument("--window-size=1920x1080")
 
         wd = webdriver.Chrome(options=chrome_options)
@@ -93,6 +93,8 @@ class HailCars:
                 Models = list(map(lambda x:x.strip(), Models))
                 print(Models)
                 for model in Models:
+                    hw.wait_explicitly(By.XPATH,"//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
+                    hw.scroll_to_element(By.XPATH,"//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
                     hw.Click_element(By.XPATH,"//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
                     hw.Click_element(By.XPATH, "//button[.='Clear']")
                     hw.Click_element(By.XPATH, f"//input[@value='{model.lower()}' and @name='checkbox']")
@@ -154,11 +156,11 @@ class HailCars:
                             except Exception as e:
                                 print(f"error: {e}")
 
-                    hw.wait_explicitly(By.XPATH,"//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
-                    hw.scroll_to_element(By.XPATH, "//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
-                    hw.Click_element(By.XPATH,"//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
-                    hw.Click_element(By.XPATH, "//button[.='Clear']")
-                    hw.Click_element(By.XPATH, "//button[@value='submit' and .='Submit']")
+                hw.wait_explicitly(By.XPATH,"//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
+                hw.scroll_to_element(By.XPATH, "//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
+                hw.Click_element(By.XPATH,"//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
+                hw.Click_element(By.XPATH, "//button[.='Clear']")
+                hw.Click_element(By.XPATH, "//button[@value='submit' and .='Submit']")
 
                 hw.wait_explicitly(By.XPATH,"//a[contains(.,'Make')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
                 hw.scroll_to_element(By.XPATH, "//a[contains(.,'Make')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
