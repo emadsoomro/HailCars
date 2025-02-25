@@ -87,7 +87,7 @@ class Handywrapper:
             return []
 
 
-    def Click_element(self,By_type="", locator="", element=None ):
+    def Click_element(self,By_type="", locator="", element=None, timeout=3 ):
         try:
             time.sleep(0.5)
             if element is not None:
@@ -95,9 +95,9 @@ class Handywrapper:
                 time.sleep(0.5)
                 element.click()
             else:
-                self.wait_explicitly(By_type, locator)
+                self.wait_explicitly(By_type, locator, timeout=timeout)
                 element = self.find_element(By_type, locator)
-                self.wait_explicitly(By_type, locator)
+                self.wait_explicitly(By_type, locator, timeout=timeout)
                 # self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
                 time.sleep(0.5)
                 element.click()

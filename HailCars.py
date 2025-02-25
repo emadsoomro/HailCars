@@ -41,6 +41,7 @@ class HailCars:
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+        chrome_options.add_argument("--incognito")
         chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
         chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
         chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
@@ -181,30 +182,35 @@ class HailCars:
                   "FAW", "MG", "Prince", "Mercedes", "Chevrolet", "Isuzu", "Subaru", "Proton", "DFSK"]
 
         chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Run Chrome in headless mode
-        chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
-        chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
-        chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
+        # chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+        chrome_options.add_argument("--incognito")  # Run Chrome in incognito mode
+        # chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+        # chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
+        # chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
         chrome_options.add_argument("--window-size=1920x1080")
 
         wd = webdriver.Chrome(options=chrome_options)
 
         hw = Handywrapper(wd)
         for location in Locations:
+            # wd.get("https://www.olx.com.pk")
+            # hw.Click_element(By.XPATH, "(//a[.='Cars'])[2]")
             wd.get("https://www.olx.com.pk/cars_c84")
+            hw.Click_element(By.XPATH, "//button[@id='moe-dontallow_button']")
             hw.wait_explicitly(By.XPATH, f"(//span[contains(.,'{location}')])[1]")
             hw.Click_element(By.XPATH, f"(//span[contains(.,'{location}')])[1]")
             time.sleep(0.5)
-            hw.Click_element(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox']")
             run =1
             for make in makes:
                 time.sleep(0.5)
                 if run ==1:
-                    hw.Click_element(By.XPATH,f"//span[.='{make}']")
+                    hw.Click_element(By.XPATH,f"//span[.='{make}']", timeout=10)
                     time.sleep(1)
                 parsed_data = []
                 model_el = hw.find_elements(By.XPATH,"//div[.='Brand and Model']/following-sibling::div//label/preceding-sibling::input[@type='checkbox']")
                 for model_ind in range(len(model_el)):
+                    if not hw.is_element_present(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox' and @checked]"):
+                        hw.Click_element(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox']")
                     run +=1
                     model_ind = model_ind + 1
                     hw.Click_element(By.XPATH, f"//span[.='{make}']")
@@ -212,10 +218,12 @@ class HailCars:
                     model = hw.find_element(By.XPATH,f"(//div[.='Brand and Model']/following-sibling::div//label/preceding-sibling::input[@type='checkbox'])[{model_ind}]")
                     hw.Click_element(element=model)
                     time.sleep(0.5)
+                    hw.Click_element(By.XPATH,"//button[@id='moe-dontallow_button']")
                     model_text = hw.find_element_text(By_type=By.XPATH, locator=f"(//div[.='Brand and Model']/following-sibling::div//label/span)[{model_ind}]")
                     time.sleep(0.5)
                     items = hw.find_elements(By.XPATH, "//li[@aria-label='Listing']/article")
                     for item_ind in range(len(items)):
+                        "//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox' and @checked]"
                         time.sleep(0.1)
                         item_ind = item_ind + 1
                         try:
@@ -289,13 +297,8 @@ class HailCars:
                                 print(f"error: {e}")
 
                     time.sleep(0.5)
-                    try:
-                        # wd.execute_script(
-                        #     "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
-                        # hw.find_element(By.XPATH, "//a[.='Clear']"))
-                        hw.find_element(By.XPATH, "//a[.='Clear']")
-                    except:
-                        pass
+
+                    hw.scroll_to_element(By.XPATH, "//a[.='Clear']")
                     hw.Click_element(By.XPATH, "//a[.='Clear']")
                     time.sleep(1)
 
@@ -311,6 +314,7 @@ class HailCars:
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+        chrome_options.add_argument("--incognito")
         chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
         chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
         chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
@@ -505,5 +509,5 @@ class HailCars:
         conn.commit()
         print(f"record inserted {data}")
 HailCars = HailCars()
-HailCars.pakwheels()
+HailCars.olx()
 
