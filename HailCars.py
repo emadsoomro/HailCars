@@ -296,11 +296,13 @@ class HailCars:
                             except Exception as e:
                                 print(f"error: {e}")
 
-                    time.sleep(0.5)
+                    hw.scroll_to_element(By.XPATH, "(//div[.='Brand and Model']/following-sibling::div//label/preceding-sibling::input[@type='checkbox'])[1][@checked]")
+                    hw.Click_element(By.XPATH, "(//div[.='Brand and Model']/following-sibling::div//label/preceding-sibling::input[@type='checkbox'])[1][@checked]")
 
-                    hw.scroll_to_element(By.XPATH, "//a[.='Clear']")
-                    hw.Click_element(By.XPATH, "//a[.='Clear']")
-                    time.sleep(1)
+                hw.scroll_to_element(By.XPATH, "//a[.='Clear']")
+                time.sleep(0.5)
+                hw.Click_element(By.XPATH, "//a[.='Clear']")
+                time.sleep(1)
 
     def gari(self):
         database_cred = "postgresql://saim:R2_RkmUt3xc59Gjzuhn33A@joking-egret-7111.8nk.cockroachlabs.cloud:26257/HailCars?sslmode=require"
