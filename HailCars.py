@@ -207,10 +207,12 @@ class HailCars:
                     hw.Click_element(By.XPATH,f"//span[.='{make}']", timeout=10)
                     time.sleep(1)
                 parsed_data = []
+                hw.Click_element(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox']")
+                time.sleep(1)
                 model_el = hw.find_elements(By.XPATH,"//div[.='Brand and Model']/following-sibling::div//label/preceding-sibling::input[@type='checkbox']")
                 for model_ind in range(len(model_el)):
-                    if not hw.is_element_present(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox' and @checked]"):
-                        hw.Click_element(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox']")
+                    # if not hw.is_element_present(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox' and @checked]"):
+                    #     hw.Click_element(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox']")
                     run +=1
                     model_ind = model_ind + 1
                     hw.Click_element(By.XPATH, f"//span[.='{make}']")
