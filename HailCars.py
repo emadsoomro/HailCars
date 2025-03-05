@@ -40,11 +40,11 @@ class HailCars:
 
 
         chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Run Chrome in headless mode
-        chrome_options.add_argument("--incognito")
-        chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
-        chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
-        chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
+        # chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+        # chrome_options.add_argument("--incognito")
+        # chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+        # chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
+        # chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
         chrome_options.add_argument("--window-size=1920x1080")
 
         wd = webdriver.Chrome(options=chrome_options)
@@ -145,17 +145,17 @@ class HailCars:
 
                         if vehicle_details["Brand"] != "" and vehicle_details["Description"] != "" and vehicle_details["Model"] != "" and vehicle_details["Image"] != "" and vehicle_details["City"] !="":
                             parsed_data.append(vehicle_details)
-
-                            data_to_insert = (
-                                str(vehicle_details['Brand']), str(vehicle_details['Description']), str(vehicle_details['Condition']),
-                                str(vehicle_details['Model Year']), str(vehicle_details['Manufacturer']), str(vehicle_details['Fuel Type']),
-                                str(vehicle_details['Transmission']), str(vehicle_details['Engine']), vehicle_details['Mileage'], vehicle_details['Price'],
-                                str(vehicle_details['Currency']), str(vehicle_details['URL']), vehicle_details['Image'], vehicle_details['City'], vehicle_details['Model'],
-                            datetime.now().isoformat())
-                            try:
-                                self.insert_data(conn, cursor,table_name, data_to_insert)
-                            except Exception as e:
-                                print(f"error: {e}")
+                            if vehicle_details["Model"].lower() in vehicle_details["URL"].lower():
+                                data_to_insert = (
+                                    str(vehicle_details['Brand']), str(vehicle_details['Description']), str(vehicle_details['Condition']),
+                                    str(vehicle_details['Model Year']), str(vehicle_details['Manufacturer']), str(vehicle_details['Fuel Type']),
+                                    str(vehicle_details['Transmission']), str(vehicle_details['Engine']), vehicle_details['Mileage'], vehicle_details['Price'],
+                                    str(vehicle_details['Currency']), str(vehicle_details['URL']), vehicle_details['Image'], vehicle_details['City'], vehicle_details['Model'],
+                                datetime.now().isoformat())
+                                try:
+                                    self.insert_data(conn, cursor,table_name, data_to_insert)
+                                except Exception as e:
+                                    print(f"error: {e}")
 
                 hw.wait_explicitly(By.XPATH,"//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
                 hw.scroll_to_element(By.XPATH, "//a[contains(.,'Model')]/parent::div/following-sibling::div/div/span[contains(.,'more choices')]")
@@ -192,28 +192,35 @@ class HailCars:
         wd = webdriver.Chrome(options=chrome_options)
 
         hw = Handywrapper(wd)
+        error = True
         for location in Locations:
             # wd.get("https://www.olx.com.pk")
             # hw.Click_element(By.XPATH, "(//a[.='Cars'])[2]")
-            wd.get("https://www.olx.com.pk/cars_c84")
-            hw.Click_element(By.XPATH, "//button[@id='moe-dontallow_button']")
-            hw.wait_explicitly(By.XPATH, f"(//span[contains(.,'{location}')])[1]")
-            hw.Click_element(By.XPATH, f"(//span[contains(.,'{location}')])[1]")
-            time.sleep(0.5)
-            run =1
+
             for make in makes:
+                while error:
+                    wd.get("https://www.olx.com.pk/cars_c84")
+                    time.sleep(0.5)
+                    error = hw.is_element_present(By.XPATH, "//span[.='Something went wrong']")
+                    if error:
+                        time.sleep(60)
+
+                hw.Click_element(By.XPATH, "//button[@id='moe-dontallow_button']")
+                hw.wait_explicitly(By.XPATH, f"(//span[contains(.,'{location}')])[1]")
+                hw.Click_element(By.XPATH, f"(//span[contains(.,'{location}')])[1]")
+                # time.sleep(0.5)
                 time.sleep(0.5)
-                if run ==1:
-                    hw.Click_element(By.XPATH,f"//span[.='{make}']", timeout=10)
-                    time.sleep(1)
+
+                hw.Click_element(By.XPATH,f"//span[.='{make}']", timeout=10)
+                time.sleep(1)
                 parsed_data = []
-                hw.Click_element(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox']")
+                if not hw.is_element_present(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox' and @checked]"):
+                    hw.Click_element(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox']", timeout=5)
                 time.sleep(1)
                 model_el = hw.find_elements(By.XPATH,"//div[.='Brand and Model']/following-sibling::div//label/preceding-sibling::input[@type='checkbox']")
                 for model_ind in range(len(model_el)):
                     # if not hw.is_element_present(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox' and @checked]"):
                     #     hw.Click_element(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox']")
-                    run +=1
                     model_ind = model_ind + 1
                     hw.Click_element(By.XPATH, f"//span[.='{make}']")
                     time.sleep(1)
@@ -301,10 +308,10 @@ class HailCars:
                     hw.scroll_to_element(By.XPATH, "(//div[.='Brand and Model']/following-sibling::div//label/preceding-sibling::input[@type='checkbox'])[1][@checked]")
                     hw.Click_element(By.XPATH, "(//div[.='Brand and Model']/following-sibling::div//label/preceding-sibling::input[@type='checkbox'])[1][@checked]")
 
-                hw.scroll_to_element(By.XPATH, "//a[.='Clear']")
-                time.sleep(0.5)
-                hw.Click_element(By.XPATH, "//a[.='Clear']")
-                time.sleep(1)
+                    hw.scroll_to_element(By.XPATH, "//a[.='Clear']")
+                    time.sleep(0.5)
+                    hw.Click_element(By.XPATH, "//a[.='Clear']")
+                    time.sleep(1)
 
     def gari(self):
         database_cred = "postgresql://saim:R2_RkmUt3xc59Gjzuhn33A@joking-egret-7111.8nk.cockroachlabs.cloud:26257/HailCars?sslmode=require"
@@ -513,5 +520,5 @@ class HailCars:
         conn.commit()
         print(f"record inserted {data}")
 HailCars = HailCars()
-HailCars.olx()
+HailCars.pakwheels()
 
