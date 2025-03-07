@@ -15,7 +15,7 @@ class Handywrapper:
             self.wait_explicitly(By_type, locator, timeout=3)
             element = self.driver.find_element(By_type, locator)
             self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
-            print(element)
+            # print(element)
             return element
         except:
             return element
