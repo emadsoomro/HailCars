@@ -188,7 +188,7 @@ class HailCars:
         # chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
         # chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
         # chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
-        # chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
         chrome_options.add_argument("--window-size=1920x1080")
 
         wd = webdriver.Chrome(options=chrome_options)
@@ -219,6 +219,7 @@ class HailCars:
                 time.sleep(0.5)
                 parsed_data = []
 
+                hw.wait_explicitly(By.XPATH,"//div[.='Brand and Model']/following-sibling::div//label/preceding-sibling::input[@type='checkbox']", timeout=10)
                 model_el = hw.find_elements(By.XPATH,"//div[.='Brand and Model']/following-sibling::div//label/preceding-sibling::input[@type='checkbox']")
                 for model_ind in range(len(model_el)):
                     # if not hw.is_element_present(By.XPATH,"//span[contains(.,'Used')]/parent::label/preceding-sibling::input[@type='checkbox' and @checked]"):
