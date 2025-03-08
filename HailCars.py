@@ -45,6 +45,7 @@ class HailCars:
         # chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
         # chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
         # chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
+        # chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
         chrome_options.add_argument("--window-size=1920x1080")
 
         wd = webdriver.Chrome(options=chrome_options)
@@ -187,6 +188,7 @@ class HailCars:
         # chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
         # chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
         # chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
+        # chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
         chrome_options.add_argument("--window-size=1920x1080")
 
         wd = webdriver.Chrome(options=chrome_options)
@@ -330,6 +332,7 @@ class HailCars:
         chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
         chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (sometimes needed)
         chrome_options.add_argument("--window-size=1920x1080")
+        chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
         wd = webdriver.Chrome(options=chrome_options)
         hw = Handywrapper(wd)
